@@ -8,25 +8,32 @@
 <h1>pagehide test</h1>
 <p>Open DevTools → Network and navigate away from this page.</p>
 
-<script>
-    window.addEventListener("pagehide", function (event) {
-      const payload = {
-        event: "pagehide",
-        persisted: event.persisted,
-        timestamp: Date.now(),
-        url: location.href
-      };
+<button id="sendBtn">Send button request</button>
 
-      fetch("https://webhook.site/83d8c268-dd19-40a6-8d8f-838b15e5a954", {
+<script>
+    const ENDPOINT = "https://webhook.site/83d8c268-dd19-40a6-8d8f-838b15e5a954";
+
+    function sendText(bodyText) {
+      fetch(ENDPOINT, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "text/plain"
         },
-        body: JSON.stringify(payload),
-        keepalive: true // important for unload
+        body: bodyText,
+        keepalive: true
       }).catch(function () {
-        // ignore errors during unload
+        // ignore errors
       });
+    }
+
+    // Button click request
+    document.getElementById("sendBtn").addEventListener("click", function () {
+      sendText("Button request");
+    });
+
+    // pagehide request
+    window.addEventListener("pagehide", function () {
+      sendText("Alex test body text");
     });
 </script>
 </body>
